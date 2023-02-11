@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -22,65 +21,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
-    public Pigeon2 gyro;    
-    
-    /* Auto Drive Motor PID Values */
-        private static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
-        private static final double AUTO_DRIVE_I_CONTROLLER = 0.0;
-        private static final double AUTO_DRIVE_D_CONTROLLER = 0.0;
-        private static final double AUTO_TURN_P_CONTROLLER = 10.0;
-        private static final double AUTO_TURN_I_CONTROLLER = 0.0;
-        private static final double AUTO_TURN_D_CONTROLLER = 0.0;
-        
-        public double getAutoDriveKP() {
-            return AUTO_DRIVE_P_CONTROLLER;
-        }
-
-        public double getAutoDriveKI() {
-            return AUTO_DRIVE_I_CONTROLLER;
-        }
-
-        public double getAutoDriveKD() {
-            return AUTO_DRIVE_D_CONTROLLER;
-        }
-
-        public double getAutoTurnKP() {
-          return AUTO_TURN_P_CONTROLLER;
-        }
-      
-        public double getAutoTurnKI() {
-          return AUTO_TURN_I_CONTROLLER;
-        }
-      
-        public double getAutoTurnKD() {
-          return AUTO_TURN_D_CONTROLLER;
-        }
-
-        public final PIDController autoXController =
-            new PIDController(getAutoDriveKP(), getAutoDriveKI(), getAutoDriveKD());
-        public final PIDController autoYController =
-            new PIDController(getAutoDriveKP(), getAutoDriveKI(), getAutoDriveKD());
-        public final PIDController autoThetaController =
-            new PIDController(getAutoTurnKP(), getAutoTurnKI(), getAutoTurnKD());
-    
-    public PIDController getAutoXController() {
-        return autoXController;
-    }
-    
-    public PIDController getAutoYController() {
-        return autoYController;
-    }
-    
-    public PIDController getAutoThetaController() {
-        return autoThetaController;
-    }
+    public Pigeon2 gyro;
 
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
         gyro.configFactoryDefault();
         zeroGyro();
-        
-                            
+
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
             new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -126,7 +73,7 @@ public class Swerve extends SubsystemBase {
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
     }    
-    
+
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
     }
