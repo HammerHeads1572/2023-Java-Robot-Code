@@ -24,6 +24,7 @@
     },
     {
       "anchorPoint": {
+<<<<<<< Updated upstream
         "x": 3.0,
         "y": 5.0
       },
@@ -34,6 +35,18 @@
       "nextControl": {
         "x": 3.0,
         "y": 4.0
+=======
+        "x": 9.051983635882165,
+        "y": 3.226400920886949
+      },
+      "prevControl": {
+        "x": 9.051983635882165,
+        "y": 2.226400920886949
+      },
+      "nextControl": {
+        "x": 9.051983635882165,
+        "y": 2.226400920886949
+>>>>>>> Stashed changes
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,6 +62,7 @@
     },
     {
       "anchorPoint": {
+<<<<<<< Updated upstream
         "x": 5.0,
         "y": 3.0
       },
@@ -59,6 +73,18 @@
       "nextControl": {
         "x": 6.0,
         "y": 3.0
+=======
+        "x": 7.7941136733337295,
+        "y": 7.12792978777447
+      },
+      "prevControl": {
+        "x": 6.7941136733337295,
+        "y": 7.12792978777447
+      },
+      "nextControl": {
+        "x": 8.79411367333374,
+        "y": 7.12792978777447
+>>>>>>> Stashed changes
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -74,12 +100,21 @@
     },
     {
       "anchorPoint": {
+<<<<<<< Updated upstream
         "x": 2.9616189019612094,
         "y": 1.3573625019590472
       },
       "prevControl": {
         "x": 2.9616189019612094,
         "y": 2.608125854549583
+=======
+        "x": 11.04183442409438,
+        "y": 4.704575792130308
+      },
+      "prevControl": {
+        "x": 11.04183442409438,
+        "y": 5.95533914472087
+>>>>>>> Stashed changes
       },
       "nextControl": null,
       "holonomicAngle": 0,
