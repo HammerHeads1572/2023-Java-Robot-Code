@@ -4,11 +4,18 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
+import java.util.ArrayList;
+
 import com.pathplanner.lib.PathConstraints;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -78,9 +85,11 @@ public class RobotContainer {
     
     // A chooser for autonomous commands
     public SendableChooser<PathPlannerTrajectory> m_chooser = new SendableChooser<>();
-    
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("Example Path", new PathConstraints(4, 3));
+    //PathPlannerTrajectory examplePath = PathPlanner.loadPath("Example Path", new PathConstraints(4, 3));
 
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath("basic path", new PathConstraints(4, 3));
+    Command autoPath = 
+        FollowPath(examplePath);
     //Chooses default m_chooser (Adding autos to list MUST be in this block)
     {m_chooser.setDefaultOption("Simple Auto", examplePath);
     }
