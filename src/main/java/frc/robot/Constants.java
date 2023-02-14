@@ -12,6 +12,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
+   
 
     public static final class Swerve {
         public static final int pigeonID = 13;
@@ -21,18 +22,26 @@ public final class Constants {
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L3);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(21.73); //TODO: This must be tuned to specific robot
+        public static final double trackWidth = Units.inchesToMeters(21.73); 
+        public static final double wheelBase = Units.inchesToMeters(21.73); 
         public static final double wheelCircumference = chosenModule.wheelCircumference;
+        
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+        public static final SwerveDriveKinematics getSwerveDriveKinematics() { 
+            return new SwerveDriveKinematics(
+                new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+                new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+                new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+        }
+        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
             new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
-
+        
         /* Module Gear Ratios */
         public static final double driveGearRatio = chosenModule.driveGearRatio;
         public static final double angleGearRatio = chosenModule.angleGearRatio;
@@ -72,6 +81,7 @@ public final class Constants {
         public static final double driveKD = 0.0;
         public static final double driveKF = 0.0;
 
+        
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
         public static final double driveKS = (0.32 / 12); //TODO: This must be tuned to specific robot
@@ -83,6 +93,12 @@ public final class Constants {
         public static final double maxSpeed = 4.5; //TODO: This must be tuned to specific robot
         /** Radians per Second */
         public static final double maxAngularVelocity = 10.0; //TODO: This must be tuned to specific robot
+
+        public double getRobotMaxAngularVelocity() {
+            return maxAngularVelocity;
+        }
+
+
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Coast;
@@ -145,4 +161,5 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+    
 }

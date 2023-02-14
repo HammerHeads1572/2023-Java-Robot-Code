@@ -16,12 +16,19 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
     public int moduleNumber;
-    private Rotation2d angleOffset;
     private Rotation2d lastAngle;
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
     private CANCoder angleEncoder;
+    public final int driveMotorID;
+    public final int angleMotorID;
+    public final int cancoderID;
+    public final Rotation2d angleOffset;
+
+    public int getModuleNumber() {
+        return moduleNumber;
+      }
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
@@ -39,10 +46,29 @@ public class SwerveModule {
 
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID,"Canivore");
+
         configDriveMotor();
 
         lastAngle = getState().angle;
+
+        // TODO:New Member Variables added need to be initialized 
+        driveMotorID = 0;
+        angleMotorID = 0;
+        cancoderID = 0;
+       
+        
     }
+    public SwerveModule(
+        int driveMotorID, 
+        int angleMotorID, 
+        int canCoderID, 
+        Rotation2d angleOffset) {
+        this.driveMotorID = driveMotorID;
+        this.angleMotorID = angleMotorID;
+        this.cancoderID = canCoderID;
+        this.angleOffset = angleOffset;
+    }
+
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         /* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
@@ -102,6 +128,8 @@ public class SwerveModule {
         mDriveMotor.setNeutralMode(Constants.Swerve.driveNeutralMode);
         mDriveMotor.setSelectedSensorPosition(0);
     }
+   
+    
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(
@@ -109,6 +137,7 @@ public class SwerveModule {
             getAngle()
         ); 
     }
+    
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
@@ -116,4 +145,5 @@ public class SwerveModule {
             getAngle()
         );
     }
+    
 }
