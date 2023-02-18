@@ -31,7 +31,9 @@ public class SwerveModule {
       }
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
+    
 
+    //Dummy swerve module to convert SwerveModuleConstants into SwerveModule
     public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants){
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
@@ -51,7 +53,6 @@ public class SwerveModule {
 
         lastAngle = getState().angle;
 
-        // TODO:New Member Variables added need to be initialized 
         driveMotorID = 0;
         angleMotorID = 0;
         cancoderID = 0;

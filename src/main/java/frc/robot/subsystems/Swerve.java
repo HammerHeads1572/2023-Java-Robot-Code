@@ -18,18 +18,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
-    public Pigeon2 gyro;    
-    public final SwerveModule flModule;
-    public final SwerveModule frModule;
-    public final SwerveModule blModule;
-    public final SwerveModule brModule;
+    public Pigeon2 gyro;   
     
     /* Auto Drive Motor PID Values */
         private static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
@@ -111,54 +106,7 @@ public class Swerve extends SubsystemBase {
     }
 
     
-    public Swerve() {
-        gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
-        gyro.configFactoryDefault();
-        zeroGyro();
-        
-                            
-        mSwerveMods = new SwerveModule[] {
-            new SwerveModule(0, Constants.Swerve.Mod0.constants),
-            new SwerveModule(1, Constants.Swerve.Mod1.constants),
-            new SwerveModule(2, Constants.Swerve.Mod2.constants),
-            new SwerveModule(3, Constants.Swerve.Mod3.constants)
-        };
-
-
-        blModule = mSwerveMods[2]; 
-        flModule = mSwerveMods[1];
-        brModule = mSwerveMods[0];
-        frModule = mSwerveMods[3];
-
-        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-         */
-        Timer.delay(1.0);
-        resetModulesToAbsolute();
-
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
-    }
     
-    /** Constructs a new DrivetrainSubsystem method. */
-    public void DriveTrain(
-        Pigeon2 gyro,
-        SwerveModule flModule,
-        SwerveModule frModule,
-        SwerveModule blModule,
-        SwerveModule brModule) {
-    this.gyro = gyro;
-    this.mSwerveMods[1] = flModule;
-    this.mSwerveMods[3] = frModule;
-    this.mSwerveMods[2] = blModule;
-    this.mSwerveMods[0] = brModule;
-
-    this.autoThetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    this.centerGravity = new Translation2d(); // default to (0,0)
-
-    this.chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
-    }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates =

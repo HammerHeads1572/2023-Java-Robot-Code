@@ -58,17 +58,6 @@ public class DriveTrain extends SubsystemBase {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pathPlannerState);
     }
 
-    private Translation2d centerGravity;
-    
-    private final SwerveDriveKinematics kinematics =
-        RobotConfig.getSwerveDriveKinematics();
-    
-    private ChassisSpeeds chassisSpeeds;
-
-
-    
-    
-    
     public DriveTrain() {
         
         gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
@@ -135,9 +124,9 @@ public class DriveTrain extends SubsystemBase {
 
     this.autoThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    this.centerGravity = new Translation2d(); // default to (0,0)
+    new Translation2d();
 
-    this.chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+    new ChassisSpeeds(0.0, 0.0, 0.0);
     }
     
     public Pose2d getPose() {

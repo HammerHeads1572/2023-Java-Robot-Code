@@ -58,7 +58,7 @@ public class RobotContainer {
     //tried making it static 
     
     
-    DriveTrain Drivetrain = new DriveTrain(gyro, flModule, frModule, blModule, brModule);
+    DriveTrain drivetrain = new DriveTrain(gyro, flModule, frModule, blModule, brModule);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -105,16 +105,30 @@ public class RobotContainer {
                 if (examplePath == null ) {
                     throw new IllegalArgumentException("example path is null.");
                 }
-                if (Drivetrain == null) {
+                if (drivetrain == null) {
                     throw new IllegalArgumentException("drivetrain is null");
                 }
-//  TODO: drivrain hates humman life and makes me very sad with nullpointexeptions :(
     
         Command examplePathCommand = new FollowPath(examplePath, s_Swerve, true){  
         };
+        PathPlannerTrajectory for2back1 = 
+        PathPlanner.loadPath(
+                "forward2backward1", new PathConstraints(4, 3));
+
+                if (for2back1 == null ) {
+                    throw new IllegalArgumentException("example path is null.");
+                }
+                if (drivetrain == null) {
+                    throw new IllegalArgumentException("drivetrain is null");
+                }
+    
+        Command for2back1Command = new FollowPath(for2back1, s_Swerve, true){  
+        };
 
         m_chooser.setDefaultOption("examplePath", examplePathCommand);
-     
+        m_chooser.addOption("for2back1", for2back1Command);
+
+
         SmartDashboard.putData(m_chooser);
     }    
     
