@@ -33,6 +33,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = RobotContainer.getInstance();
+    
+     /*  if (m_autonomousCommand == null ) {
+        throw new IllegalArgumentException("example path is null at the top of robot.");
+    }
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+      */
   }
 
   /**
@@ -62,8 +68,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-//TODO: Auto path is null? 
-    //might not be null, possibly just doesnt actually run what it's supposed to,
+    if (m_autonomousCommand == null ) {
+      throw new IllegalArgumentException("example path is null.");
+  }
+  
+    
+    //TODO: Auto path is null? 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.RobotContainer;
+import edu.wpi.first.wpilibj2.command.Command;
+
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -17,6 +20,9 @@ public class TeleopSwerve extends CommandBase {
     private DoubleSupplier strafeSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
+    public Command m_autonomousCommand;
+
+  private RobotContainer m_robotContainer;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         this.s_Swerve = s_Swerve;
@@ -36,6 +42,9 @@ public class TeleopSwerve extends CommandBase {
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
         /* Drive */
+        m_robotContainer = RobotContainer.getInstance();
+      
+          m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 

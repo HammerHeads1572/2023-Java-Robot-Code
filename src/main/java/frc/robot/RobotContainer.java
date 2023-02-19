@@ -63,7 +63,10 @@ public class RobotContainer {
     }
 
     
-    
+    public static RobotContainer getInstance() {
+        return robotContainer;
+    }
+
     /*A chooser for autonomous commands*/
     private SendableChooser<Command> m_chooser = new SendableChooser<>();
     
@@ -78,26 +81,23 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
-    public static RobotContainer getInstance() {
-        return robotContainer;
-    }
-
     private void configureAutoCommands() {
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
          *
          * @return the command to run in autonomous
          */
-        PathPlannerTrajectory basicpath = 
+        PathPlannerTrajectory basicpath2 = 
         PathPlanner.loadPath(
-                "basic path", new PathConstraints(1, 1));
+                "straight forward", new PathConstraints(0.4, 0.03));
 
-        Command basicPathCommand = new FollowPath(basicpath, s_Swerve, true){  
+        Command basicPathCommand2 = new FollowPath(basicpath2, s_Swerve, true){  
         };
+        m_chooser.setDefaultOption("basic path", basicPathCommand2);
 
         SmartDashboard.putData(m_chooser);
 
-        m_chooser.setDefaultOption("basic path", basicPathCommand);
+       
      
     }    
     
