@@ -43,22 +43,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     
-    
-    //SwerveModuleConstants flModule = new SwerveModuleConstants(2, 1, 9, Rotation2d.fromDegrees(266.57));
-    SwerveModule flModule = new SwerveModule(2, 1, 9, Rotation2d.fromDegrees(266.57));
-    SwerveModule frModule = new SwerveModule(4, 3, 9, Rotation2d.fromDegrees(185.53));
-    SwerveModule blModule = new SwerveModule(6, 5, 9, Rotation2d.fromDegrees(139.04));
-    SwerveModule brModule = new SwerveModule(8, 7, 9, Rotation2d.fromDegrees(262.79));
-    Pigeon2 gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
-    
-
-    //tried deretly copying it into robotcontainer
-    //tried making it into a class in swerve but this is the best soulution we have
-    //tried messing around with name 
-    //tried making it static 
-    
-    
-    DriveTrain drivetrain = new DriveTrain(gyro, flModule, frModule, blModule, brModule);
+    /*Robotsontainer singleton */  
+    private static RobotContainer robotContainer = new RobotContainer();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -77,6 +63,10 @@ public class RobotContainer {
     }
 
     
+    
+    /*A chooser for autonomous commands*/
+    private SendableChooser<Command> m_chooser = new SendableChooser<>();
+    
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -87,10 +77,10 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
-    // A chooser for autonomous commands
-    private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-
+    public static RobotContainer getInstance() {
+        return robotContainer;
+    }
 
     private void configureAutoCommands() {
         /**
@@ -98,38 +88,17 @@ public class RobotContainer {
          *
          * @return the command to run in autonomous
          */
-        PathPlannerTrajectory examplePath = 
+        PathPlannerTrajectory basicpath = 
         PathPlanner.loadPath(
-                "basic path", new PathConstraints(4, 3));
+                "basic path", new PathConstraints(1, 1));
 
-                if (examplePath == null ) {
-                    throw new IllegalArgumentException("example path is null.");
-                }
-                if (drivetrain == null) {
-                    throw new IllegalArgumentException("drivetrain is null");
-                }
-    
-        Command examplePathCommand = new FollowPath(examplePath, s_Swerve, true){  
+        Command basicPathCommand = new FollowPath(basicpath, s_Swerve, true){  
         };
-        PathPlannerTrajectory for2back1 = 
-        PathPlanner.loadPath(
-                "forward2backward1", new PathConstraints(4, 3));
-
-                if (for2back1 == null ) {
-                    throw new IllegalArgumentException("example path is null.");
-                }
-                if (drivetrain == null) {
-                    throw new IllegalArgumentException("drivetrain is null");
-                }
-    
-        Command for2back1Command = new FollowPath(for2back1, s_Swerve, true){  
-        };
-
-        m_chooser.setDefaultOption("examplePath", examplePathCommand);
-        m_chooser.addOption("for2back1", for2back1Command);
-
 
         SmartDashboard.putData(m_chooser);
+
+        m_chooser.setDefaultOption("basic path", basicPathCommand);
+     
     }    
     
     public Command getAutonomousCommand() {

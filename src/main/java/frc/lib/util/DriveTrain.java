@@ -58,37 +58,12 @@ public class DriveTrain extends SubsystemBase {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pathPlannerState);
     }
 
-    public DriveTrain() {
-        
-        gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
-        gyro.configFactoryDefault();
-        zeroGyro();
-        
-                            
-        mSwerveMods = new SwerveModule[] {
-            new SwerveModule(0, Constants.Swerve.Mod0.constants),
-            new SwerveModule(1, Constants.Swerve.Mod1.constants),
-            new SwerveModule(2, Constants.Swerve.Mod2.constants),
-            new SwerveModule(3, Constants.Swerve.Mod3.constants)
-
-        };
-        
-        blModule = mSwerveMods[2]; 
-        flModule = mSwerveMods[1];
-        brModule = mSwerveMods[0];
-        frModule = mSwerveMods[3];
-        
-        
-        /* By pausing init for a second before setting module offsets, we avoid a bug with inverting motors.
-         * See https://github.com/Team364/BaseFalconSwerve/issues/8 for more info.
-         */
-        Timer.delay(1.0);
-        resetModulesToAbsolute();
-
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
-    }
+    private Translation2d centerGravity;
     
+    private final SwerveDriveKinematics kinematics =
+        RobotConfig.getSwerveDriveKinematics();
     
+    private ChassisSpeeds chassisSpeeds; 
 
     /** Constructs a new DrivetrainSubsystem method. 
      * 
@@ -96,10 +71,12 @@ public class DriveTrain extends SubsystemBase {
     */
     public DriveTrain(
         Pigeon2 gyro,
+        SwerveModule brModule,
         SwerveModule flModule,
-        SwerveModule frModule,
         SwerveModule blModule,
-        SwerveModule brModule) {
+        SwerveModule frModule
+        
+        ) {
          mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
             new SwerveModule(1, Constants.Swerve.Mod1.constants),
@@ -107,26 +84,32 @@ public class DriveTrain extends SubsystemBase {
             new SwerveModule(3, Constants.Swerve.Mod3.constants)
     
         };
-            
+        brModule = mSwerveMods[0]; 
+        flModule = mSwerveMods[1]; 
         blModule = mSwerveMods[2]; 
-        flModule = mSwerveMods[1];
-        brModule = mSwerveMods[0];
         frModule = mSwerveMods[3];
     this.gyro = gyro;
-    this.flModule = flModule;
-    this.frModule = frModule;
-    this.blModule = blModule;
     this.brModule = brModule;
-    this.mSwerveMods[1] = flModule;
-    this.mSwerveMods[3] = frModule;
-    this.mSwerveMods[2] = blModule;
+    this.flModule = flModule;
+    this.blModule = blModule;
+    this.frModule = frModule;
+    
     this.mSwerveMods[0] = brModule;
+    this.mSwerveMods[1] = flModule;
+    this.mSwerveMods[2] = blModule;
+    this.mSwerveMods[3] = frModule;
+    
+    
+    
+    gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
+    gyro.configFactoryDefault();
+    zeroGyro();
 
     this.autoThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    new Translation2d();
+    this.centerGravity = new Translation2d(); // default to (0,0)
 
-    new ChassisSpeeds(0.0, 0.0, 0.0);
+    this.chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
     }
     
     public Pose2d getPose() {
@@ -159,11 +142,6 @@ public class DriveTrain extends SubsystemBase {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
-    public void resetModulesToAbsolute(){
-        for(SwerveModule mod : mSwerveMods){
-            mod.resetToAbsolute();
-        }
-    }
     public void setSwerveModuleStates(SwerveModuleState[] states) {
         SwerveDriveKinematics.desaturateWheelSpeeds(
             states, RobotConfig.getRobotMaxAngularVelocity());
