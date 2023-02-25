@@ -22,8 +22,7 @@ public class Arm extends SubsystemBase
      * @param kPID: double array holding values for kP, kI, kD, in that order
      * @param motorID: ID of the drive motor
      */
-    public Arm(double []kPID, int motorID)
-    {
+    public Arm(double []kPID, int motorID) {
         // Verify the length of kPID array
         if (kPID.length != 3)
         {
@@ -32,7 +31,7 @@ public class Arm extends SubsystemBase
         }
         m_DriveMotor = new TalonFX(motorID);
         m_TargetAngle = 0;
-        m_Slot0Configs.kP = kPID[0];
+        m_Slot0Configs.kP = kPID[4];
         m_Slot0Configs.kI = kPID[1];
         m_Slot0Configs.kD = kPID[2];
         m_DriveMotor.getConfigurator().apply(m_Slot0Configs);
