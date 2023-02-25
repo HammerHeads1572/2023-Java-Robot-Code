@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenixpro.configs.Slot0Configs;
 import com.ctre.phoenixpro.controls.PositionVoltage;
 import com.ctre.phoenixpro.hardware.TalonFX;
+//import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.math.controller.ControlAffinePlantInversionFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase
@@ -28,14 +30,22 @@ public class Arm extends SubsystemBase
             System.err.println("ERROR: INVALID KPID LENGTH IN ARM INIT");
             return;
         }
-        m_DriveMotor = new TalonFX(leaderID);
-        m_FollowMotor = new TalonFX(followerID);
+        m_DriveMotor = new TalonFX(14,"Canivore");
+        m_FollowMotor = new TalonFX(15,"Canivore");
         m_TargetAngle = 0;
         m_Slot0Configs.kP = kPID[0];
         m_Slot0Configs.kI = kPID[1];
         m_Slot0Configs.kD = kPID[2];
         m_DriveMotor.getConfigurator().apply(m_Slot0Configs);
         m_Offset = 0;
+
+        /* are these needed for proper motor initialization ?
+        m_DriveMotor.configFactoryDefault();
+        m_DriveMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        m_DriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
+        m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
+        resetToAbsolute();
+        */
     }
 
     /**

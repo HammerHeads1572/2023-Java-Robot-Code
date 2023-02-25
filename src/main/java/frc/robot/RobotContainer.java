@@ -26,13 +26,13 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
-    private double[] kPIDArray = {0.1, 0.01, 0.01};
-    Arm arm = new Arm(kPIDArray, 1,3);
+    private double[] kPIDArray = {5, 5, 0.0};
+    Arm arm = new Arm(kPIDArray, 14,15);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
-    CommandXboxController exampleCommandController = new CommandXboxController(1); 
+    CommandXboxController exampleCommandController = new CommandXboxController(2); 
     //Trigger xButton = exampleCommandController.x()
     //   .whileTrue(new TeleopArm(90, arm)); 
 
@@ -51,6 +51,8 @@ public class RobotContainer {
     /*Robotsontainer singleton */  
     private static RobotContainer robotContainer = new RobotContainer();
 
+    /* Intake control flag */
+    private boolean m_stayClosed = false;
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
