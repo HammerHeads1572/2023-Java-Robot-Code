@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -83,8 +83,8 @@ public class Swerve extends SubsystemBase {
     public PIDController getAutoThetaController() {
         return autoThetaController;
     }
-    public void resetOdometry(Pose2d pathPlannerState) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pathPlannerState);
+    public void resetOdometry(Pose2d pose2d) {
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose2d);
     }
     private Translation2d centerGravity;
     
@@ -226,7 +226,5 @@ public class Swerve extends SubsystemBase {
     }
 
 
-    public void resetOdometry(PathPlannerState initialState) {
-    }
-    
+
 }

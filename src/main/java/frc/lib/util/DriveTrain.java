@@ -54,8 +54,8 @@ public class DriveTrain extends SubsystemBase {
         return autoThetaController;
     }
 
-    public void resetOdometry(Pose2d pathPlannerState) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pathPlannerState);
+    public void resetOdometry(Pose2d pose2d) {
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose2d);
     }
 
     private Translation2d centerGravity;

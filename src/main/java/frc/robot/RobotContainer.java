@@ -5,16 +5,19 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Autos.exampleAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
+
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.pathplanner.lib.PathConstraints;
+
 
 
 import frc.robot.commands.*;
@@ -30,6 +33,9 @@ public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
+    CommandXboxController exampleCommandController = new CommandXboxController(1); 
+    Trigger xButton = exampleCommandController.x()
+       .whileTrue(new TeleopArm(90)); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -87,24 +93,30 @@ public class RobotContainer {
          *
          * @return the command to run in autonomous
          */
-        PathPlannerTrajectory basicpath2 = 
-        PathPlanner.loadPath(
-                "straight forward", new PathConstraints(0.4, 0.03));
+      
+           /*  commandChooser.setDefaultOption("example auto", new InstantCommand(() -> s_Swerve.resetOdometry(exampleTrajectory.getInitialPose())));
+           
+            commandChooser.addOption("test auto",new InstantCommand(() -> s_Swerve.resetOdometry(testpath.getInitialPose())));
+                   
+                   SmartDashboard.putData("Command Chooser", commandChooser);
+           
+               
 
-        Command basicPathCommand2 = new FollowPath(basicpath2, s_Swerve, true){  
-        };
-        m_chooser.setDefaultOption("basic path", basicPathCommand2);
-
+        */
         SmartDashboard.putData(m_chooser);
 
        
      
     }    
     
-    public Command getAutonomousCommand() {
-        return m_chooser.getSelected();
+    //public Command getAutonomousCommand() {
+       // return m_chooser.getSelected();
         
-    }
+    //}
+    public Command getAutonomousCommand() {
+        // An ExampleCommand will run in autonomous
+        return new exampleAuto(s_Swerve);
 
      
+}
 }
