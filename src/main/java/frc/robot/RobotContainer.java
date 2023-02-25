@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -13,16 +12,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Autos.exampleAuto;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
-
-import com.ctre.phoenix.sensors.Pigeon2;
 
 
 
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.lib.util.DriveTrain;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -30,12 +24,17 @@ import frc.lib.util.DriveTrain;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    /*Arm */
+    //TODO: PID values need to be set
+    private double[] kPIDArray = {0.1, 0.01, 0.01};
+    Arm arm = new Arm(kPIDArray, 1,3);
+
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
     CommandXboxController exampleCommandController = new CommandXboxController(1); 
-    Trigger xButton = exampleCommandController.x()
-       .whileTrue(new TeleopArm(90)); 
+    //Trigger xButton = exampleCommandController.x()
+    //   .whileTrue(new TeleopArm(90, arm)); 
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -52,11 +51,15 @@ public class RobotContainer {
     /*Robotsontainer singleton */  
     private static RobotContainer robotContainer = new RobotContainer();
 
-    /*Arm */
-    //Arm arm = new Arm(kPID, 10);
-
+    
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        Trigger xButton = exampleCommandController.x()
+          .whileTrue(new TeleopArm(90, arm)); 
+
+        Trigger bButton = exampleCommandController.x()
+          .whileTrue(new TeleopArm(0, arm)); 
+
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
