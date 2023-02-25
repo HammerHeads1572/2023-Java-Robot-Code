@@ -17,6 +17,7 @@ import frc.robot.Autos.exampleAuto;
 
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Intake;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -48,19 +49,20 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     
-    /*Robotsontainer singleton */  
+    /*Robotcontainer singleton */  
     private static RobotContainer robotContainer = new RobotContainer();
-
-    /* Intake control flag */
-    private boolean m_stayClosed = false;
     
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         Trigger xButton = exampleCommandController.x()
           .whileTrue(new TeleopArm(90, arm)); 
-
         Trigger bButton = exampleCommandController.x()
           .whileTrue(new TeleopArm(0, arm)); 
+        Trigger inTake = exampleCommandController.b()
+            .whileTrue(new RunIntakeCommand())
+            .whileFalse(new HoldIntakeCommand());
+        Trigger outPut = exampleCommandController.a();
 
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
