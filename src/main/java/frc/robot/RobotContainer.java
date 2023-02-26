@@ -5,19 +5,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+
+
 import frc.robot.Autos.exampleAuto;
-
-
-
-
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeMotor;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -28,15 +27,13 @@ public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
     private double[] kPIDArray = {5, 5, 0.0};
-    Arm arm = new Arm(kPIDArray, 14,15);
+    Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
     CommandXboxController exampleCommandController = new CommandXboxController(2); 
-    //Trigger xButton = exampleCommandController.x()
-    //   .whileTrue(new TeleopArm(90, arm)); 
-
+    
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
@@ -52,17 +49,22 @@ public class RobotContainer {
     /*Robotcontainer singleton */  
     private static RobotContainer robotContainer = new RobotContainer();
     
+    /* Intake Declaration? */
+    private final IntakeMotor robotIntake = new IntakeMotor(Constants.intakeMotorID);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        
+        /* Setting up Operator controls */
         Trigger xButton = exampleCommandController.x()
           .whileTrue(new TeleopArm(90, arm)); 
-        Trigger bButton = exampleCommandController.x()
+        Trigger yButton = exampleCommandController.y()
           .whileTrue(new TeleopArm(0, arm)); 
         Trigger inTake = exampleCommandController.b()
             .whileTrue(new RunIntakeCommand())
             .whileFalse(new HoldIntakeCommand());
-        Trigger outPut = exampleCommandController.a();
+        Trigger outPut = exampleCommandController.a()
+            .whileTrue(new ReleaseIntakeCommand());
 
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -14,6 +15,9 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final int timeoutMs = 1000;
 
+    public static final int armLeaderID = 14;
+    public static final int armFollowerID = 15;
+    public static final int intakeMotorID = 16;
 
     public static final class Swerve {
         public static final int pigeonID = 13;

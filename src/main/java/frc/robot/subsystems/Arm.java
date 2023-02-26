@@ -1,9 +1,17 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenixpro.configs.Slot0Configs;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+/*import com.ctre.phoenixpro.configs.Slot0Configs;
 import com.ctre.phoenixpro.controls.PositionVoltage;
 import com.ctre.phoenixpro.hardware.TalonFX;
-//import com.ctre.phoenix.motorcontrol.can.TalonFX;
+*/
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+
+import frc.robot.Robot;
+import frc.robot.Constants;
+
+
 
 import edu.wpi.first.math.controller.ControlAffinePlantInversionFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,7 +21,7 @@ public class Arm extends SubsystemBase
     private TalonFX m_DriveMotor;
     private TalonFX m_FollowMotor;
     private double m_TargetAngle;
-    private Slot0Configs m_Slot0Configs = new Slot0Configs();
+    // private Slot0Configs m_Slot0Configs = new Slot0Configs();
     private double m_Offset;
     //private double m_TicksToRotation = 0.000244140625;
     private double m_DegreesToRotation = 0.0027777777;
@@ -30,22 +38,34 @@ public class Arm extends SubsystemBase
             System.err.println("ERROR: INVALID KPID LENGTH IN ARM INIT");
             return;
         }
-        m_DriveMotor = new TalonFX(14,"Canivore");
-        m_FollowMotor = new TalonFX(15,"Canivore");
+        m_DriveMotor = new TalonFX(leaderID,"Canivore");
+        m_FollowMotor = new TalonFX(followerID,"Canivore");
         m_TargetAngle = 0;
+        /* 
         m_Slot0Configs.kP = kPID[0];
         m_Slot0Configs.kI = kPID[1];
         m_Slot0Configs.kD = kPID[2];
-        m_DriveMotor.getConfigurator().apply(m_Slot0Configs);
+        */
+        // m_DriveMotor.getConfigurator().apply(m_Slot0Configs);
         m_Offset = 0;
 
-        /* are these needed for proper motor initialization ?
+        /* are these needed for proper motor initialization ?*/
         m_DriveMotor.configFactoryDefault();
+
+        // change
         m_DriveMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
         m_DriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
         m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
-        resetToAbsolute();
-        */
+        // from example code
+        //Sm_DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+
+        m_DriveMotor.set(TalonFXControlMode.Position,0);
+
+        m_DriveMotor.config_kP(0, 0.1);
+        m_DriveMotor.config_kI(0, 0.01);
+        m_DriveMotor.config_kD(0, 0.01);
+        m_DriveMotor.config_kF(0, 0.0);
+        
     }
 
     /**
@@ -55,11 +75,12 @@ public class Arm extends SubsystemBase
     public void periodic()
     {
         // Create a position closed-loop request
-        PositionVoltage request = new PositionVoltage(0).withSlot(0);
+        //removd because phoencx pro command
+        // PositionVoltage request = new PositionVoltage(0).Slot(0);
      
         // Set position to targetAngle?
         m_DriveMotor.setControl(request.withPosition(m_TargetAngle));
-        m_FollowMotor.setControl(request.withPosition(m_TargetAngle));
+         m_FollowMotor.setControl(request.withPosition(m_TargetAngle));
 
     }
 
