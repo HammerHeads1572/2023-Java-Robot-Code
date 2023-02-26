@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ReleaseIntakeCommand extends CommandBase{
     /*IMPORTANT:
@@ -16,8 +17,14 @@ public class ReleaseIntakeCommand extends CommandBase{
         
         releaseIntake = true;
 
-        if (RunIntakeCommand.holdingIntake == false && releaseIntake == true) {
-            releaseIntake = false;
-        }
+        
     }
+
+    public void end() {
+        new WaitCommand(0.1);
+            if (RunIntakeCommand.holdingIntake == false && releaseIntake == true) {
+                releaseIntake = false;
+            }
+    }
+
 }

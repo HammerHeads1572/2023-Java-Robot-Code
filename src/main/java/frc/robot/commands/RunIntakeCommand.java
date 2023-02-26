@@ -17,12 +17,13 @@ public class RunIntakeCommand extends CommandBase {
         
         holdingIntake = true;
 
+    }
 
+    public void end() {
         if (ReleaseIntakeCommand.releaseIntake == true) {
             holdingIntake = false;
         }
     }
-
     
 }
 

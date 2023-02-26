@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 
 
@@ -30,7 +28,7 @@ public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
     private double[] kPIDArray = {5, 5, 5};
-     Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
+    Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
@@ -41,7 +39,6 @@ public class RobotContainer {
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = Joystick.AxisType.kX.value;
-    int x =3;
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
@@ -64,15 +61,15 @@ public class RobotContainer {
         /* Setting up Operator controls */
         //Trigger xButton = exampleCommandController.x()
         //  .whileTrue(new TeleopArm(90, arm)); 
+
+        
+        // other Idea for a imput control
         // xButton.whileTrue(new TeleopArm(90, arm));
-        new TeleopArm(0, arm);
-        if (x==3)
-        {
-            System.err.println("hello");
-            return;
-        }
-        new TeleopArm(90, arm);
-        Trigger yButton = exampleCommandController.y()
+        
+
+         Trigger yButton = exampleCommandController.y()
+          .whileTrue(new TeleopArm(90, arm)); 
+        Trigger xButton = exampleCommandController.x()
           .whileTrue(new TeleopArm(0, arm)); 
         Trigger inTake = exampleCommandController.b()
             .whileTrue(new RunIntakeCommand())
