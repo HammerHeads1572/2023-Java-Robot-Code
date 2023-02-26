@@ -24,13 +24,14 @@ public class Arm extends SubsystemBase
     // private Slot0Configs m_Slot0Configs = new Slot0Configs();
     private double m_Offset;
     //private double m_TicksToRotation = 0.000244140625;
-    private double m_DegreesToRotation = 0.0027777777;
+    private double m_DegreesToRotation = 53;
 
     /**
      * 
      * @param kPID: double array holding values for kP, kI, kD, in that order
      * @param leaderID: ID of the drive motor
      */
+    
     public Arm(double []kPID, int leaderID, int followerID) {
         // Verify the length of kPID array
         if (kPID.length != 3)
@@ -58,13 +59,11 @@ public class Arm extends SubsystemBase
         m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
         // from example code
         //Sm_DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
+        m_DriveMotor.config_kP(0, 0.01);
+        m_DriveMotor.config_kI(0, 0.0);
+        m_DriveMotor.config_kD(0, 0.0);
 
-        m_DriveMotor.set(TalonFXControlMode.Position,0);
-
-        m_DriveMotor.config_kP(0, 0.1);
-        m_DriveMotor.config_kI(0, 0.01);
-        m_DriveMotor.config_kD(0, 0.01);
-        m_DriveMotor.config_kF(0, 0.0);
+    
         
     }
 
@@ -79,8 +78,10 @@ public class Arm extends SubsystemBase
         // PositionVoltage request = new PositionVoltage(0).Slot(0);
      
         // Set position to targetAngle?
-        m_DriveMotor.setControl(request.withPosition(m_TargetAngle));
-         m_FollowMotor.setControl(request.withPosition(m_TargetAngle));
+        // m_DriveMotor.setControl(request.withPosition(m_TargetAngle));
+        //  m_FollowMotor.setControl(request.withPosition(m_TargetAngle));        
+       
+        m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
 
     }
 

@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
 
 
 import frc.robot.Autos.exampleAuto;
@@ -26,23 +29,26 @@ import frc.robot.subsystems.IntakeMotor;
 public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
-    private double[] kPIDArray = {5, 5, 0.0};
-    Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
+    private double[] kPIDArray = {5, 5, 5};
+     Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
-    CommandXboxController exampleCommandController = new CommandXboxController(2); 
+    private final CommandXboxController exampleCommandController = new CommandXboxController(2); 
     
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = Joystick.AxisType.kX.value;
+    int x =3;
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton xButton = new JoystickButton(driver, 3);
 
+    //private final XboxController xButton = new CommandXboxControllerButton(exampleCommandController,XboxController.Button.kX.value);
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     
@@ -56,8 +62,16 @@ public class RobotContainer {
     public RobotContainer() {
         
         /* Setting up Operator controls */
-        Trigger xButton = exampleCommandController.x()
-          .whileTrue(new TeleopArm(90, arm)); 
+        //Trigger xButton = exampleCommandController.x()
+        //  .whileTrue(new TeleopArm(90, arm)); 
+        // xButton.whileTrue(new TeleopArm(90, arm));
+        new TeleopArm(0, arm);
+        if (x==3)
+        {
+            System.err.println("hello");
+            return;
+        }
+        new TeleopArm(90, arm);
         Trigger yButton = exampleCommandController.y()
           .whileTrue(new TeleopArm(0, arm)); 
         Trigger inTake = exampleCommandController.b()

@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import com.ctre.phoenixpro.controls.PositionVoltage;
 
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Arm;
@@ -25,7 +24,7 @@ public class TeleopArm extends CommandBase {
     public TeleopArm(double angle, Arm localArm)
     {
         m_TargetAngle = angle * m_DegreesToRotation;
-        m_Offset = 0; // Currently set to zero as placeholder. Consider future removal if unused.
+        m_Offset = 0; //TODO: Currently set to zero as placeholder. Consider future removal if unused.
 
         m_arm = localArm;
     }
