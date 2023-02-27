@@ -17,7 +17,11 @@ public final class Constants {
 
     public static final int armLeaderID = 14;
     public static final int armFollowerID = 15;
-    public static final int intakeMotorID = 16;
+    public static final int intakeMotorID = 16;    
+    public static final int wristMotorID = 17;
+
+    public static final double [] armPID = {0.05, 0, 0.1};
+    public static final double [] wristPID = {0.1, 0, 0.02};
 
     public static final class Swerve {
         public static final int pigeonID = 13;

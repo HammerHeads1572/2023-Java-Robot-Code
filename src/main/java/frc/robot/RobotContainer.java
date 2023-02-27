@@ -1,10 +1,13 @@
 package frc.robot;
 
+import java.time.format.TextStyle;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,13 +30,18 @@ import frc.robot.subsystems.IntakeMotor;
 public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
-    private double[] kPIDArray = {5, 5, 5};
-    Arm arm = new Arm(kPIDArray, Constants.armLeaderID, Constants.armFollowerID);
+    public Arm arm = new Arm(Constants.armPID, Constants.armLeaderID, Constants.armFollowerID);
+    //TeleopArm m_TeleopArm = new TeleopArm(0, arm);
+    public Wrist m_Wrist = new Wrist(Constants.wristPID, 1, Constants.wristMotorID);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick driver2 = new Joystick(1);
-    private final CommandXboxController exampleCommandController = new CommandXboxController(2); 
+    private final XboxController m_XboxController = new XboxController(2);
+    Trigger xButton = new JoystickButton(m_XboxController, 1);
+    Trigger yButton = new JoystickButton(m_XboxController, 4);
+    Trigger bButton = new JoystickButton(m_XboxController, 3);
+    Trigger aButton = new JoystickButton(m_XboxController, 2);
     
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -43,9 +51,8 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final JoystickButton xButton = new JoystickButton(driver, 3);
 
-    //private final XboxController xButton = new CommandXboxControllerButton(exampleCommandController,XboxController.Button.kX.value);
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     
@@ -57,26 +64,6 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        
-        /* Setting up Operator controls */
-        //Trigger xButton = exampleCommandController.x()
-        //  .whileTrue(new TeleopArm(90, arm)); 
-
-        
-        // other Idea for a imput control
-        // xButton.whileTrue(new TeleopArm(90, arm));
-        
-
-         Trigger yButton = exampleCommandController.y()
-          .whileTrue(new TeleopArm(90, arm)); 
-        Trigger xButton = exampleCommandController.x()
-          .whileTrue(new TeleopArm(0, arm)); 
-        Trigger inTake = exampleCommandController.b()
-            .whileTrue(new RunIntakeCommand())
-            .whileFalse(new HoldIntakeCommand());
-        Trigger outPut = exampleCommandController.a()
-            .whileTrue(new ReleaseIntakeCommand());
-
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
@@ -106,6 +93,14 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        /* Operator Buttons */
+        //exampleCommandController.x().onTrue(Commands.runOnce(()->{System.out.println("alkhdljsfljgfdhdsLKJSAD");}, arm));
+        xButton.onTrue(new InstantCommand(() -> arm.setArmAngle(120)));
+        yButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(0); m_Wrist.setWristAngle(0);}));
+        bButton.onTrue(new InstantCommand(() -> arm.setArmAngle(-120)));
+        aButton.onTrue(new InstantCommand(() -> m_Wrist.setWristAngle(90)));
+
+        
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }

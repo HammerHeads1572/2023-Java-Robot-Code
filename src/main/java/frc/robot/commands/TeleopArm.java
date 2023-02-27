@@ -31,11 +31,12 @@ public class TeleopArm extends CommandBase {
 
     @Override
     public void execute() {
-        m_robotContainer = RobotContainer.getInstance();
+        System.out.println("test");
+        //m_robotContainer = RobotContainer.getInstance();
 
-        m_arm.setArmAngle(m_TargetAngle);
+        //m_arm.setArmAngle(m_TargetAngle);
     
-        m_arm.periodic();
+        //m_arm.periodic();
     }
     
 

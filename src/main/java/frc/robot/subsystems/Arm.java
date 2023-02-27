@@ -1,26 +1,38 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 /*import com.ctre.phoenixpro.configs.Slot0Configs;
 import com.ctre.phoenixpro.controls.PositionVoltage;
 import com.ctre.phoenixpro.hardware.TalonFX;
 */
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import frc.robot.Robot;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import java.time.Instant;
 
 public class Arm extends SubsystemBase
 {
-    private TalonFX m_DriveMotor;
-    private TalonFX m_FollowMotor;
+    private WPI_TalonFX m_DriveMotor;
+    private WPI_TalonFX m_FollowMotor;
     private double m_TargetAngle;
     // private Slot0Configs m_Slot0Configs = new Slot0Configs();
     private double m_Offset;
     //private double m_TicksToRotation = 0.000244140625;
-    private double m_DegreesToRotation = 53;
+    private double m_DegreesToRotation = 53.45*6;
+    
+    //Current limit / shutoff
+    private boolean m_OverCurrent;
+    private Instant m_CurrentBreakTarget;
+    private boolean m_Disabled;
+    private double m_MaxCurrent;
 
     /**
      * 
@@ -35,15 +47,19 @@ public class Arm extends SubsystemBase
             System.err.println("ERROR: INVALID KPID LENGTH IN ARM INIT");
             return;
         }
-        m_DriveMotor = new TalonFX(leaderID,"Canivore");
-        m_FollowMotor = new TalonFX(followerID,"Canivore");
+        m_DriveMotor = new WPI_TalonFX(leaderID,"Canivore");
+        m_FollowMotor = new WPI_TalonFX(followerID,"Canivore");
+        m_FollowMotor.setInverted(true);
+
+        m_DriveMotor.configFactoryDefault();
+        m_MaxCurrent = 0.5;
+        m_CurrentBreakTarget = Instant.now();
+        m_Disabled = false;
+
         m_TargetAngle = 0;
-        /* 
-        m_Slot0Configs.kP = kPID[0];
-        m_Slot0Configs.kI = kPID[1];
-        m_Slot0Configs.kD = kPID[2];
-        */
-        // m_DriveMotor.getConfigurator().apply(m_Slot0Configs);
+        m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
+        m_FollowMotor.follow(m_DriveMotor);
+
         m_Offset = 0;
 
         /* are these needed for proper motor initialization ?*/
@@ -55,11 +71,9 @@ public class Arm extends SubsystemBase
         m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
         // from example code
         //Sm_DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
-        m_DriveMotor.config_kP(0, 0.01);
-        m_DriveMotor.config_kI(0, 0.0);
-        m_DriveMotor.config_kD(0, 0.0);
-
-    
+        m_DriveMotor.config_kP(0, kPID[0]);
+        m_DriveMotor.config_kI(0, kPID[1]);
+        m_DriveMotor.config_kD(0, kPID[2]);
         
     }
 
@@ -76,9 +90,33 @@ public class Arm extends SubsystemBase
         // Set position to targetAngle?
         // m_DriveMotor.setControl(request.withPosition(m_TargetAngle));
         //  m_FollowMotor.setControl(request.withPosition(m_TargetAngle));        
-       
-        m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
-
+        double current = m_DriveMotor.getStatorCurrent();
+        if (current > m_MaxCurrent && !m_OverCurrent)
+        {
+            m_OverCurrent = true;
+            m_CurrentBreakTarget = Instant.now().plusMillis(500);
+        }
+        else if(m_OverCurrent)
+        {
+            if (current <= m_MaxCurrent)
+            {
+                m_OverCurrent = false;
+            }
+            else if (Instant.now().isAfter(m_CurrentBreakTarget))
+            {
+                m_Disabled = true;
+            }
+        }
+        
+        if (m_Disabled)
+        {
+            m_DriveMotor.set(TalonFXControlMode.Disabled, 1);
+        }
+        else
+        {
+            m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
+        }
+        m_FollowMotor.follow(m_DriveMotor);
     }
 
     /**
@@ -88,7 +126,12 @@ public class Arm extends SubsystemBase
      */
     public void setArmAngle(double angle)
     {
+        if (angle == 0)
+        {
+            m_Disabled = false;
+        }
         m_TargetAngle = angle * m_DegreesToRotation;
+
     }
     /**
      * THIS IS TO BE CALLED ONLY IF THERE IS A ERROR WITH THE ENCODE ALLIGNMENT
