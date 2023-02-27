@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.arm.periodic();
     m_robotContainer.m_Wrist.periodic();
+    m_robotContainer.m_Intake.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

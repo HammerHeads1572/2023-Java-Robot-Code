@@ -31,8 +31,8 @@ public class RobotContainer {
     /*Arm */
     //TODO: PID values need to be set
     public Arm arm = new Arm(Constants.armPID, Constants.armLeaderID, Constants.armFollowerID);
-    //TeleopArm m_TeleopArm = new TeleopArm(0, arm);
     public Wrist m_Wrist = new Wrist(Constants.wristPID, 1, Constants.wristMotorID);
+    public IntakeMotor m_Intake = new IntakeMotor(Constants.intakeMotorID);
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
@@ -42,6 +42,8 @@ public class RobotContainer {
     Trigger yButton = new JoystickButton(m_XboxController, 4);
     Trigger bButton = new JoystickButton(m_XboxController, 3);
     Trigger aButton = new JoystickButton(m_XboxController, 2);
+
+    Trigger rTrigger = new JoystickButton(m_XboxController, 8);
     
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -58,9 +60,6 @@ public class RobotContainer {
     
     /*Robotcontainer singleton */  
     private static RobotContainer robotContainer = new RobotContainer();
-    
-    /* Intake Declaration? */
-    private final IntakeMotor robotIntake = new IntakeMotor(Constants.intakeMotorID);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -94,12 +93,14 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Operator Buttons */
-        //exampleCommandController.x().onTrue(Commands.runOnce(()->{System.out.println("alkhdljsfljgfdhdsLKJSAD");}, arm));
-        xButton.onTrue(new InstantCommand(() -> arm.setArmAngle(120)));
+        xButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(120); m_Wrist.setWristAngle(110);}));
         yButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(0); m_Wrist.setWristAngle(0);}));
         bButton.onTrue(new InstantCommand(() -> arm.setArmAngle(-120)));
-        aButton.onTrue(new InstantCommand(() -> m_Wrist.setWristAngle(90)));
 
+        aButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-1)));
+        aButton.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
+        rTrigger.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        rTrigger.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
         
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));

@@ -4,10 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-/*import com.ctre.phoenixpro.configs.Slot0Configs;
-import com.ctre.phoenixpro.controls.PositionVoltage;
-import com.ctre.phoenixpro.hardware.TalonFX;
-*/
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -70,7 +66,6 @@ public class Arm extends SubsystemBase
         m_DriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
         m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
         // from example code
-        //Sm_DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
         m_DriveMotor.config_kP(0, kPID[0]);
         m_DriveMotor.config_kI(0, kPID[1]);
         m_DriveMotor.config_kD(0, kPID[2]);
@@ -84,12 +79,7 @@ public class Arm extends SubsystemBase
     public void periodic()
     {
         // Create a position closed-loop request
-        //removd because phoencx pro command
-        // PositionVoltage request = new PositionVoltage(0).Slot(0);
-     
-        // Set position to targetAngle?
-        // m_DriveMotor.setControl(request.withPosition(m_TargetAngle));
-        //  m_FollowMotor.setControl(request.withPosition(m_TargetAngle));        
+          
         double current = m_DriveMotor.getStatorCurrent();
         if (current > m_MaxCurrent && !m_OverCurrent)
         {
