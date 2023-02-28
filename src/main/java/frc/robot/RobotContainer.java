@@ -1,17 +1,14 @@
 package frc.robot;
 
-import java.time.format.TextStyle;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
@@ -43,7 +40,13 @@ public class RobotContainer {
     Trigger bButton = new JoystickButton(m_XboxController, 3);
     Trigger aButton = new JoystickButton(m_XboxController, 2);
 
-    Trigger rTrigger = new JoystickButton(m_XboxController, 8);
+    Trigger rTrigger = new JoystickButton(m_XboxController, 8);//TODO set buttons to correct
+    Trigger lTrigger = new JoystickButton(m_XboxController, 7);
+    Trigger lButton = new JoystickButton(m_XboxController, 5);
+    Trigger rButton = new JoystickButton(m_XboxController, 6);
+
+
+
     
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -93,14 +96,22 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Operator Buttons */
+   
         xButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(120); m_Wrist.setWristAngle(110);}));
         yButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(0); m_Wrist.setWristAngle(0);}));
         bButton.onTrue(new InstantCommand(() -> arm.setArmAngle(-120)));
 
-        aButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-1)));
-        aButton.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
+        xButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-1)));
+        xButton.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
+          
+        //Cone Ground Front
         rTrigger.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
-        rTrigger.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
+        //Cube Ground Front
+        lTrigger.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        //Cone Ground Back
+        rButton.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        //Cube Ground Back
+        lButton.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
         
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));

@@ -1,17 +1,11 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import frc.robot.Robot;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.time.Instant;
 
 public class Arm extends SubsystemBase
@@ -108,7 +102,8 @@ public class Arm extends SubsystemBase
         }
         m_FollowMotor.follow(m_DriveMotor);
     }
-
+    
+   
     /**
      * Converts and sets angle
      * 
@@ -121,7 +116,7 @@ public class Arm extends SubsystemBase
             m_Disabled = false;
         }
         m_TargetAngle = angle * m_DegreesToRotation;
-
+SmartDashboard.putNumber("arm angle", angle);
     }
     /**
      * THIS IS TO BE CALLED ONLY IF THERE IS A ERROR WITH THE ENCODE ALLIGNMENT

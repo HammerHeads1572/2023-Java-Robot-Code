@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.Robot;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,5 +62,6 @@ public class Wrist extends SubsystemBase
     public void setWristAngle(double angle)
     {
         m_TargetRotations = m_AngleToRotations * angle;
+        SmartDashboard.putNumber("wrist angle", angle);
     }
 }
