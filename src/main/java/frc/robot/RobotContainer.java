@@ -33,7 +33,10 @@ public class RobotContainer {
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    Trigger speedTrigger = new JoystickButton(driver, 1);
+
     private final Joystick driver2 = new Joystick(1);
+
     private final XboxController m_XboxController = new XboxController(2);
     Trigger xButton = new JoystickButton(m_XboxController, 1);
     Trigger yButton = new JoystickButton(m_XboxController, 4);
@@ -97,24 +100,32 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Operator Buttons */
    
-        xButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(120); m_Wrist.setWristAngle(110);}));
+        xButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(145); m_Wrist.setWristAngle(60);}));
         yButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(0); m_Wrist.setWristAngle(0);}));
-        bButton.onTrue(new InstantCommand(() -> arm.setArmAngle(-120)));
-
-        xButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-1)));
+        bButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(-145); m_Wrist.setWristAngle(170);}));
+        aButton.onTrue(new InstantCommand(() -> {arm.setArmAngle(115);m_Wrist.setWristAngle(142);;}));
+        xButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(0)));
         xButton.onFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
           
         //Cone Ground Front
-        rTrigger.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        rTrigger.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        rTrigger.whileFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
         //Cube Ground Front
-        lTrigger.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        lTrigger.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        lTrigger.whileFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
         //Cone Ground Back
-        rButton.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        rButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-.25)));
+        rButton.whileFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
         //Cube Ground Back
-        lButton.onTrue(new InstantCommand(() -> m_Intake.setSpeed(1)));
+        lButton.whileTrue(new InstantCommand(() -> m_Intake.setSpeed(-.25)));
+        lButton.whileFalse(new InstantCommand(() -> m_Intake.setSpeed(0)));
         
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //Speed Control Button
+        speedTrigger.whileFalse(new InstantCommand(() -> Swerve.speedChange(1)));
+        speedTrigger.whileTrue(new InstantCommand(() -> Swerve.speedChange(2)));
+
     }
 
     private void configureAutoCommands() {

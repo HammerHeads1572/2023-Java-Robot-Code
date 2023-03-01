@@ -11,11 +11,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Wrist extends SubsystemBase
 {
-    private CANSparkMax m_Motor;
+    public static CANSparkMax m_WristMotor;
     private SparkMaxPIDController m_PidController;
-    private RelativeEncoder m_Encoder;
+    public static RelativeEncoder m_WristEncoder;
     private double m_TargetRotations;
     private double m_AngleToRotations = 0.11111111;
+    private double angle2;
 
     /**
      * 
@@ -31,15 +32,16 @@ public class Wrist extends SubsystemBase
             return;
         }
         // Initialize motor
-        m_Motor = new CANSparkMax(motorID, MotorType.kBrushless);
+        m_WristMotor = new CANSparkMax(motorID, MotorType.kBrushless);
 
         // Reset to factory defaults to avoid unexpected behavior
-        m_Motor.restoreFactoryDefaults();
+        m_WristMotor.restoreFactoryDefaults();
+        m_WristMotor.setClosedLoopRampRate(4.);
 
         // Construct a PID controller from sparkmax object
-        m_PidController = m_Motor.getPIDController();
+        m_PidController = m_WristMotor.getPIDController();
         // Create encode object to store location
-        m_Encoder = m_Motor.getEncoder();
+        m_WristEncoder = m_WristMotor.getEncoder();
 
         // Initialize PID values.
         m_PidController.setP(PID[0]);
@@ -57,11 +59,12 @@ public class Wrist extends SubsystemBase
     public void periodic()
     {
         m_PidController.setReference(m_TargetRotations, CANSparkMax.ControlType.kPosition);
+
     }
 
     public void setWristAngle(double angle)
     {
         m_TargetRotations = m_AngleToRotations * angle;
-        SmartDashboard.putNumber("wrist angle", angle);
+        angle2 = angle;
     }
 }

@@ -20,14 +20,16 @@ public final class Constants {
     public static final int intakeMotorID = 17;    
     public static final int wristMotorID = 16;
 
-    public static final double [] armPID = {0.05, 0, 0.1};
-    public static final double [] wristPID = {0.1, 0, 0.02};
+    
+    public static final double [] armPID = {0.03, 0, 20.};
+    public static final double [] wristPID = {0.03, 0, 2.0};
+
 
     public static final class Intake
     {
         public static final double currentThreshold = 19.0;
         public static final int msToHold = 250;
-        public static final double holdSpeed = 0.2;
+        public static final double holdSpeed = 0.3;
     }
 
     public static final class Swerve {
@@ -100,9 +102,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 0.005; //TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 4.; //TODO: Percentage of max speed
         /** Radians per Second */
-        public static final double maxAngularVelocity = 0.005; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 4.; //TODO: This must be tuned to specific robot
 
         public double getRobotMaxAngularVelocity() {
             return maxAngularVelocity;
@@ -156,7 +158,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 1;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;

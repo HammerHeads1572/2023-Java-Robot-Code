@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Wrist;
 
 
 /**
@@ -58,14 +61,22 @@ public class Robot extends TimedRobot {
     m_robotContainer.arm.periodic();
     m_robotContainer.m_Wrist.periodic();
     m_robotContainer.m_Intake.periodic();
+    //SmartDashboard.putNumber("arm angle", Arm.arm_angle);
+   
+    
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
-  @Override
+  @Override 
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    SmartDashboard.putNumber("arm angle", (Arm.m_ArmDriveMotor.getSelectedSensorPosition() / 1024*3.14));
+    SmartDashboard.putNumber("wrist angle", (Wrist.m_WristEncoder.getPosition()*9 ));
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -97,7 +108,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic(){}
+  public void teleopPeriodic(){
+    SmartDashboard.putNumber("wrist angle", (Wrist.m_WristEncoder.getPosition()*9 ));
+    SmartDashboard.putNumber("arm angle", (Arm.m_ArmDriveMotor.getSelectedSensorPosition() / 1024*3.14));
+
+  }
 
   @Override
   public void testInit() {

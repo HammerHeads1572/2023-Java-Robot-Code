@@ -45,7 +45,7 @@ public class TeleopSwerve extends CommandBase {
       
           m_autonomousCommand = m_robotContainer.getAutonomousCommand();
         s_Swerve.drive(
-            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed), 
+            new Translation2d(translationVal, strafeVal).times(Swerve.changeSpeed), 
             rotationVal * Constants.Swerve.maxAngularVelocity, 
             !robotCentricSup.getAsBoolean(), 
             true

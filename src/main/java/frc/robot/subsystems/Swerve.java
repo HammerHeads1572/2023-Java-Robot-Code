@@ -29,6 +29,8 @@ public class Swerve extends SubsystemBase {
     public final SwerveModule frModule;
     public final SwerveModule blModule;
     public final SwerveModule brModule;
+
+    public static double changeSpeed;
    
     /* Auto Drive Motor PID Values */
         private static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
@@ -153,7 +155,7 @@ public class Swerve extends SubsystemBase {
                                     translation.getY(), 
                                     rotation)
                                 );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Swerve.changeSpeed);
 
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
@@ -164,7 +166,7 @@ public class Swerve extends SubsystemBase {
     
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Swerve.changeSpeed);
         
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
@@ -193,8 +195,11 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
+    public static void speedChange(double currentSpeed){
+        changeSpeed = currentSpeed;
+    }
     public void zeroGyro(){
-        gyro.setYaw(0);
+        gyro.setYaw(-90);
     }
 
     public Rotation2d getYaw() {

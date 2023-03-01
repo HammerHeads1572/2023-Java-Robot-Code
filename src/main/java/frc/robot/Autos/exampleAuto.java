@@ -28,7 +28,6 @@ public class exampleAuto extends SequentialCommandGroup {
         // An example trajectory to follow.  All units in meters.
         // to make a new trajectry just copy and paste this whole block
         Trajectory exampleTrajectory =
-
         
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction

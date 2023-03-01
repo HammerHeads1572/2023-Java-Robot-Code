@@ -1,18 +1,28 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import frc.robot.Robot;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.time.Instant;
+import com.ctre.phoenix.sensors.CANCoder;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Arm extends SubsystemBase
 {
-    private WPI_TalonFX m_DriveMotor;
+    public static WPI_TalonFX m_ArmDriveMotor;
     private WPI_TalonFX m_FollowMotor;
     private double m_TargetAngle;
+    private CANCoder angleEncoder;
+
     // private Slot0Configs m_Slot0Configs = new Slot0Configs();
     private double m_Offset;
     //private double m_TicksToRotation = 0.000244140625;
@@ -23,13 +33,14 @@ public class Arm extends SubsystemBase
     private Instant m_CurrentBreakTarget;
     private boolean m_Disabled;
     private double m_MaxCurrent;
+    public static double arm_angle;
 
+    
     /**
      * 
      * @param kPID: double array holding values for kP, kI, kD, in that order
      * @param leaderID: ID of the drive motor
      */
-    
     public Arm(double []kPID, int leaderID, int followerID) {
         // Verify the length of kPID array
         if (kPID.length != 3)
@@ -37,33 +48,42 @@ public class Arm extends SubsystemBase
             System.err.println("ERROR: INVALID KPID LENGTH IN ARM INIT");
             return;
         }
-        m_DriveMotor = new WPI_TalonFX(leaderID,"Canivore");
+        m_ArmDriveMotor = new WPI_TalonFX(leaderID,"Canivore");
+        m_ArmDriveMotor.configFactoryDefault();
+        m_ArmDriveMotor.configClosedloopRamp(3.);
+        //m_ArmDriveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      20,                25,                1.0));
+        //m_ArmDriveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      10,                15,                0.5));
+       //m_ArmDriveMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        m_ArmDriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
+        m_ArmDriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
         m_FollowMotor = new WPI_TalonFX(followerID,"Canivore");
         m_FollowMotor.setInverted(true);
-
-        m_DriveMotor.configFactoryDefault();
-        m_MaxCurrent = 0.5;
+        
+        m_MaxCurrent = 30.0;
         m_CurrentBreakTarget = Instant.now();
         m_Disabled = false;
 
         m_TargetAngle = 0;
-        m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
-        m_FollowMotor.follow(m_DriveMotor);
+        m_ArmDriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
+        m_FollowMotor.follow(m_ArmDriveMotor);
 
         m_Offset = 0;
 
-        /* are these needed for proper motor initialization ?*/
-        m_DriveMotor.configFactoryDefault();
+      
 
         // change
-        m_DriveMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
-        m_DriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
-        m_DriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
-        // from example code
-        m_DriveMotor.config_kP(0, kPID[0]);
-        m_DriveMotor.config_kI(0, kPID[1]);
-        m_DriveMotor.config_kD(0, kPID[2]);
         
+        // from example code
+        m_ArmDriveMotor.config_kP(0, kPID[0]);
+        m_ArmDriveMotor.config_kI(0, kPID[1]);
+        m_ArmDriveMotor.config_kD(0, kPID[2]);
+
+        // Attempt at global current limit
+        StatorCurrentLimitConfiguration currentLimitConfig = new StatorCurrentLimitConfiguration
+        (true, 30., 30., 0.0);
+        m_ArmDriveMotor.configStatorCurrentLimit(currentLimitConfig);
+        m_FollowMotor.configStatorCurrentLimit(currentLimitConfig);
+
     }
 
     /**
@@ -73,8 +93,8 @@ public class Arm extends SubsystemBase
     public void periodic()
     {
         // Create a position closed-loop request
-          
-        double current = m_DriveMotor.getStatorCurrent();
+
+        double current = m_ArmDriveMotor.getStatorCurrent();
         if (current > m_MaxCurrent && !m_OverCurrent)
         {
             m_OverCurrent = true;
@@ -94,16 +114,22 @@ public class Arm extends SubsystemBase
         
         if (m_Disabled)
         {
-            m_DriveMotor.set(TalonFXControlMode.Disabled, 1);
+            m_ArmDriveMotor.set(TalonFXControlMode.Disabled, 1);
         }
         else
         {
-            m_DriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
+            m_ArmDriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
         }
-        m_FollowMotor.follow(m_DriveMotor);
+        m_FollowMotor.follow(m_ArmDriveMotor);
+        SmartDashboard.putNumber("arm angle", (m_ArmDriveMotor.getSelectedSensorPosition() / 1024*3.14));
+
+        
     }
     
-   
+    public Rotation2d getCanCoder(){
+        return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+    }
+
     /**
      * Converts and sets angle
      * 
@@ -116,7 +142,8 @@ public class Arm extends SubsystemBase
             m_Disabled = false;
         }
         m_TargetAngle = angle * m_DegreesToRotation;
-SmartDashboard.putNumber("arm angle", angle);
+        arm_angle = angle;
+
     }
     /**
      * THIS IS TO BE CALLED ONLY IF THERE IS A ERROR WITH THE ENCODE ALLIGNMENT
