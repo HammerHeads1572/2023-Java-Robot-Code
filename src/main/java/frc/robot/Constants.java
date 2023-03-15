@@ -11,6 +11,8 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
+import frc.robot.subsystems.IntakeMotor;
+
 public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final int timeoutMs = 1000;
@@ -21,7 +23,8 @@ public final class Constants {
     public static final int wristMotorID = 16;
 
     
-    public static final double [] armPID = {0.03, 0, 20.};
+
+    public static final double [] armPID = {0.03, 0, IntakeMotor.armDampening};
     public static final double [] wristPID = {0.03, 0, 2.0};
 
 

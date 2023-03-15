@@ -1,20 +1,17 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import frc.robot.Robot;
-import frc.robot.Constants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.time.Instant;
 import com.ctre.phoenix.sensors.CANCoder;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Rotation2d;
+
+import java.time.Instant;
+
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase
 {
@@ -24,7 +21,7 @@ public class Arm extends SubsystemBase
     private CANCoder angleEncoder;
 
     // private Slot0Configs m_Slot0Configs = new Slot0Configs();
-    private double m_Offset;
+    //private double m_Offset;
     //private double m_TicksToRotation = 0.000244140625;
     private double m_DegreesToRotation = 53.45*6;
     
@@ -35,7 +32,6 @@ public class Arm extends SubsystemBase
     private double m_MaxCurrent;
     public static double arm_angle;
 
-    
     /**
      * 
      * @param kPID: double array holding values for kP, kI, kD, in that order
@@ -50,10 +46,7 @@ public class Arm extends SubsystemBase
         }
         m_ArmDriveMotor = new WPI_TalonFX(leaderID,"Canivore");
         m_ArmDriveMotor.configFactoryDefault();
-        m_ArmDriveMotor.configClosedloopRamp(3.);
-        //m_ArmDriveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true,      20,                25,                1.0));
-        //m_ArmDriveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,      10,                15,                0.5));
-       //m_ArmDriveMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
+        m_ArmDriveMotor.configClosedloopRamp(IntakeMotor.rampTime);
         m_ArmDriveMotor.setInverted(Constants.Swerve.angleMotorInvert);
         m_ArmDriveMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
         m_FollowMotor = new WPI_TalonFX(followerID,"Canivore");
@@ -67,7 +60,7 @@ public class Arm extends SubsystemBase
         m_ArmDriveMotor.set(TalonFXControlMode.Position,m_TargetAngle);
         m_FollowMotor.follow(m_ArmDriveMotor);
 
-        m_Offset = 0;
+        //m_Offset = 0;
 
       
 

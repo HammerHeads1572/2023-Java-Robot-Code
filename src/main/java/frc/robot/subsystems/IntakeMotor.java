@@ -17,6 +17,8 @@ public class IntakeMotor extends SubsystemBase{
     private Instant m_TimeToHold;
     private boolean m_IsHolding;
 
+    public static double armDampening;
+    public static double rampTime;
 
     public IntakeMotor(int motorID)
     {
@@ -27,6 +29,9 @@ public class IntakeMotor extends SubsystemBase{
         m_IsHolding = false;
 
         m_Speed = 0;
+
+        armDampening = 10;
+        rampTime = 1.125;
     }
 
     /**
@@ -60,6 +65,14 @@ public class IntakeMotor extends SubsystemBase{
                 m_Speed = Constants.Intake.holdSpeed;
                 m_IsHolding = true;
             }
+        }
+
+        if (m_IsHolding = true) {
+            armDampening = 20;
+            rampTime = 4;
+        } else {
+            armDampening = 10;
+            rampTime = 1.125;
         }
     }
 
