@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-
+import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.RelativeEncoder;
@@ -15,7 +16,8 @@ public class Wrist extends SubsystemBase
     public static RelativeEncoder m_WristEncoder;
     private double m_TargetRotations;
     private double m_AngleToRotations = 0.11111111;
-    //private double angle2;
+    private double angle2;
+    public double CurrentAngle;
 
     /**
      * 
@@ -35,7 +37,7 @@ public class Wrist extends SubsystemBase
 
         // Reset to factory defaults to avoid unexpected behavior
         m_WristMotor.restoreFactoryDefaults();
-        m_WristMotor.setClosedLoopRampRate(4.);
+        m_WristMotor.setClosedLoopRampRate(1.);
 
         // Construct a PID controller from sparkmax object
         m_PidController = m_WristMotor.getPIDController();
@@ -64,6 +66,7 @@ public class Wrist extends SubsystemBase
     public void setWristAngle(double angle)
     {
         m_TargetRotations = m_AngleToRotations * angle;
-       // angle2 = angle;
+        angle2 = angle;
+        CurrentAngle = angle ;
     }
 }

@@ -29,6 +29,8 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
@@ -61,6 +63,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.arm.periodic();
     m_robotContainer.m_Wrist.periodic();
     m_robotContainer.m_Intake.periodic();
+
+    
     //SmartDashboard.putNumber("arm angle", Arm.arm_angle);
    
     
@@ -75,6 +79,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     SmartDashboard.putNumber("arm angle", (Arm.m_ArmDriveMotor.getSelectedSensorPosition() / 1024*3.14));
     SmartDashboard.putNumber("wrist angle", (Wrist.m_WristEncoder.getPosition()*9 ));
+    
+    // SmartDashboard.putBoolean("rt", m_robotContainer.RTrigger.getAsBoolean());
+
 
   }
 
@@ -109,6 +116,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic(){
+
+    
     SmartDashboard.putNumber("wrist angle", (Wrist.m_WristEncoder.getPosition()*9 ));
     SmartDashboard.putNumber("arm angle", (Arm.m_ArmDriveMotor.getSelectedSensorPosition() / 1024*3.14));
 
