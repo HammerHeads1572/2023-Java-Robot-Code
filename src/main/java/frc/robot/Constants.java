@@ -1,6 +1,8 @@
 package frc.robot;
 
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,28 +13,27 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
-import frc.robot.subsystems.IntakeMotor;
-
 public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final int timeoutMs = 1000;
 
     public static final int armLeaderID = 14;
     public static final int armFollowerID = 15;
-    public static final int intakeMotorID = 17;    
+    public static final int intakeMotorID = 18;    
     public static final int wristMotorID = 16;
 
-    
+    public static final int ArmLED = 20;
 
-    public static final double [] armPID = {0.03, 0, IntakeMotor.armDampening};
-    public static final double [] wristPID = {0.03, 0, 2.0};
+    
+    public static final double [] armPID = {0.065, 0, 6.};
+    public static final double [] wristPID = {0.06, 0, 8.};
 
 
     public static final class Intake
     {
-        public static final double currentThreshold = 19.0;
-        public static final int msToHold = 250;
-        public static final double holdSpeed = 0.3;
+        public static final double currentThreshold = 30.0;
+        public static final int msToHold = 2500;
+        public static final double holdSpeed = 0.2;
     }
 
     public static final class Swerve {
@@ -75,8 +76,8 @@ public final class Constants {
         public static final boolean angleEnableCurrentLimit = true;
 
         public static final int driveContinuousCurrentLimit = 35;
-        public static final int drivePeakCurrentLimit = 60;
-        public static final double drivePeakCurrentDuration = 0.1;
+        public static final int drivePeakCurrentLimit = 75;
+        public static final double drivePeakCurrentDuration = 0.25;
         public static final boolean driveEnableCurrentLimit = true;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
@@ -105,9 +106,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.; //TODO: Percentage of max speed
+        public static final double maxSpeed = 6.; //TODO: Percentage of max speed
         /** Radians per Second */
-        public static final double maxAngularVelocity = 4.; //TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 5.; //TODO: This must be tuned to specific robot
 
         public double getRobotMaxAngularVelocity() {
             return maxAngularVelocity;
@@ -161,7 +162,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
-        public static final double kMaxSpeedMetersPerSecond = 1;
+        public static final double kMaxSpeedMetersPerSecond = 1.5;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;

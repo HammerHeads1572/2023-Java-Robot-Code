@@ -3,35 +3,43 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import java.time.Instant;
 import frc.robot.Constants;
 
 public class IntakeMotor extends SubsystemBase{
     
-    private CANSparkMax m_Motor;
+    private WPI_TalonFX m_Motor;
     private double m_Speed;
     private boolean m_Peaking;
     private Instant m_TimeToHold;
     private boolean m_IsHolding;
+    private CANdle Lights;
 
-    public static double armDampening;
-    public static double rampTime;
-
-    public IntakeMotor(int motorID)
+    public IntakeMotor(int motorID, int ArmLED)
     {
         // Initialize intake motor
-        m_Motor = new CANSparkMax(motorID, MotorType.kBrushless);
+        m_Motor = new WPI_TalonFX(motorID);
+        m_Motor.configFactoryDefault();
         m_Motor.setInverted(true);
+        
+
+        Lights = new CANdle(ArmLED,"Canivore");
+        Lights.configFactoryDefault();
+        Lights.configLEDType(LEDStripType.RGB);
+        Lights.configBrightnessScalar(.5);
+        Lights.setLEDs(128,0,0);
+        
+        
+
+        
 
         m_IsHolding = false;
 
         m_Speed = 0;
-
-        armDampening = 10;
-        rampTime = 1.125;
     }
 
     /**
@@ -42,6 +50,23 @@ public class IntakeMotor extends SubsystemBase{
     public void periodic()
     {
         m_Motor.set(m_Speed);
+
+
+
+        if (m_Speed > 0){
+            Lights.configBrightnessScalar(.7);
+            Lights.setLEDs(0,255,0);
+
+        }
+        else if (m_Speed <0){
+            Lights.configBrightnessScalar(.7);
+            Lights.setLEDs(255, 0, 0);
+        }
+        else{
+            Lights.configBrightnessScalar(.25);
+            Lights.setLEDs(0,0,255);
+        }
+
 
         SmartDashboard.putNumber("Intake Current", m_Motor.getOutputCurrent());
         double current = m_Motor.getOutputCurrent();
@@ -67,13 +92,6 @@ public class IntakeMotor extends SubsystemBase{
             }
         }
 
-        if (m_IsHolding = true) {
-            armDampening = 20;
-            rampTime = 4;
-        } else {
-            armDampening = 10;
-            rampTime = 1.125;
-        }
     }
 
 

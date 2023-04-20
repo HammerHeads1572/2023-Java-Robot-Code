@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import java.lang.Math;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -31,6 +32,8 @@ public class Swerve extends SubsystemBase {
     public final SwerveModule brModule;
 
     public static double changeSpeed;
+    public static double FOB;
+    public static double RotationCount;
    
     /* Auto Drive Motor PID Values */
         private static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
@@ -116,6 +119,7 @@ public class Swerve extends SubsystemBase {
         gyro = new Pigeon2(Constants.Swerve.pigeonID,"Canivore");
         gyro.configFactoryDefault();
         zeroGyro();
+        RotationCount = 0;
         
                             
         mSwerveMods = new SwerveModule[] {
@@ -196,7 +200,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public static void speedChange(double currentSpeed){
+
         changeSpeed = currentSpeed;
+        
     }
     public void zeroGyro(){
         gyro.setYaw(-90);
@@ -220,7 +226,12 @@ public class Swerve extends SubsystemBase {
       }
     @Override
     public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());  
+        swerveOdometry.update(getYaw(), getModulePositions()); 
+        RotationCount = Math.round(gyro.getYaw()/360);
+        FOB = gyro.getYaw() - (RotationCount*360);
+
+
+        SmartDashboard.putNumber("Yaw", (FOB));
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
@@ -229,6 +240,11 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+
+    public void EasyArm(){
+
+
+    }
 
 
 }
